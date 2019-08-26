@@ -22,7 +22,10 @@ with howl.config
         validate: (value) -> type(value) == "number" and not tostring(value)\find("%.") and value >= 0
         default: 80
 
-format_buffer = (fmt=nil) ->
+format_buffer = (args) ->
+    {:fmt, :ok} = args
+    return unless ok
+
     buf = howl.app.editor.buffer
     error "Attempting to format read-only buffer" if buf.read_only
 
@@ -39,7 +42,10 @@ format_buffer = (fmt=nil) ->
     buf.read_only = false
     buf.text = result
 
-format_file = (fmt=nil) ->
+format_file = (args) ->
+    {:fmt, :ok} = args
+    return unless ok
+
     buf = howl.app.editor.buffer
     error "Attempting to format read-only buffer" if buf.read_only
 
@@ -61,11 +67,20 @@ format_file = (fmt=nil) ->
     buf.read_only = false
     howl.app.editor.buffer.reload()
 
+
 cmd_specs = {
-    {"format-buffer", "Format the current buffer", format_buffer}
-    {"format-buffer-with", "Format the current buffer with a given formatter", format_buffer, formatter.select}
-    {"format-file", "Format the current file and reload the buffer", format_file}
-    {"format-file-with", "Format the current file with a given formatter and reload the buffer", format_file, formatter.select}
+    {"format-buffer", "Format the current buffer", format_buffer, (opts) -> fmt: nil, ok: true}
+    {"format-buffer-with", "Format the current buffer with a given formatter"
+    format_buffer, (opts) ->
+        selection = formatter.select!
+        fmt: selection, ok: selection
+    }
+    {"format-file", "Format the current file and reload the buffer", format_file, (opts) -> fmt: nil, ok: true}
+    {"format-file-with", "Format the current file with a given formatter and reload the buffer"
+    format_file, (opts) ->
+        selection = formatter.select!
+        fmt: selection, ok: selection
+    }
 }
 for {name, description, handler, input} in *cmd_specs
     howl.command.register {:name, :description, :handler, :input}
