@@ -3,7 +3,7 @@ import Process from howl.io
 
 formatter.register
     name: "python-black"
-    description: ""
+    description: "The uncompromising Python code formatter"
     handler: (code, mode) ->
         line_length = mode.config.line_length
         out, err, proc = Process.execute {
