@@ -27,6 +27,7 @@ format_buffer = (fmt=nil) ->
 
     mode = buf.mode
     fmt or= formatter.by_mode mode
+    error "(ERROR) => No formatter for mode '#{mode.name}' " unless fmt
 
     buf.read_only = true
     ok, result = pcall fmt.handler, buf.text, mode
@@ -43,9 +44,11 @@ format_file = (fmt=nil) ->
 
     buf.read_only = true
     file = howl.app.editor.buffer.file or error "(ERROR) => No associated file"
+    error "(ERROR) => File not writeable" unless file.writeable
+
     mode = howl.mode.for_file file
     fmt or= formatter.by_mode mode
-    error "(ERROR) => File not writeable" unless file.writeable
+    error "(ERROR) => No formatter for mode '#{mode.name}' " unless fmt
 
     backup = file.contents
     ok, result = pcall fmt.file_handler, file, mode
@@ -86,6 +89,8 @@ signal_handlers = {
 howl.signal.connect sh.signal, sh.handler for sh in *signal_handlers
 unload_signals = -> howl.signal.disconnect signal, handler for {:signal, :handler} in *signal_handlers
 
+
+bundle_load "formatters" -- Initialize bundled formatters
 
 unload = ->
     unload_cmds!
