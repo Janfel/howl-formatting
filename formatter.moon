@@ -4,11 +4,11 @@ formatter_names = {}
 
 register = (fmt) ->
     formatters[fmt.name] = fmt
-    formatter_names[fmt.name] = fmt.description
+    table.insert formatter_names, {fmt.name, fmt.description}
 
 unregister = (fmt) ->
     formatters[fmt.name] = nil
-    formatter_names[fmt.name] = nil
+    table.remove formatter_names, {fmt.name, fmt.description}
 
 by_name = (name) ->
     formatters[name]
@@ -17,10 +17,14 @@ by_mode = (mode) ->
     by_name howl.config.get "formatter", "", "mode:"..mode.name
 
 select = ->
-    {:selection} = howl.interact.select
+    result = howl.interact.select
         items: formatter_names
-        columns: {"Formatter", "Description"}
-    by_name selection
+        columns: {
+            {header: "Formatter", style: "string"}
+            {header: "Description", style: "comment"}
+        }
+    return unless result
+    by_name result.selection
 
 {
     :register
