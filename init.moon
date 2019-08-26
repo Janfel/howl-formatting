@@ -24,11 +24,11 @@ with howl.config
 
 format_buffer = (fmt=nil) ->
     buf = howl.app.editor.buffer
-    error "(ERROR) => Attempting to format read-only buffer" if buf.read_only
+    error "Attempting to format read-only buffer" if buf.read_only
 
     mode = buf.mode
     fmt or= formatter.by_mode mode
-    error "(ERROR) => No formatter for mode '#{mode.name}' " unless fmt
+    error "No formatter for mode '#{mode.name}' " unless fmt
 
     buf.read_only = true
     ok, result = pcall fmt.handler, buf.text, mode
@@ -41,15 +41,15 @@ format_buffer = (fmt=nil) ->
 
 format_file = (fmt=nil) ->
     buf = howl.app.editor.buffer
-    error "(ERROR) => Attempting to format read-only buffer" if buf.read_only
+    error "Attempting to format read-only buffer" if buf.read_only
 
     buf.read_only = true
-    file = howl.app.editor.buffer.file or error "(ERROR) => No associated file"
-    error "(ERROR) => File not writeable" unless file.writeable
+    file = howl.app.editor.buffer.file or error "No file associated with buffer '#{buf}'"
+    error "File not writeable" unless file.writeable
 
     mode = howl.mode.for_file file
     fmt or= formatter.by_mode mode
-    error "(ERROR) => No formatter for mode '#{mode.name}' " unless fmt
+    error "No formatter for mode '#{mode.name}' " unless fmt
 
     backup = file.contents
     ok, result = pcall fmt.file_handler, file, mode
