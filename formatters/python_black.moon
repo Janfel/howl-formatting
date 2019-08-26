@@ -6,6 +6,4 @@ formatter.register
     handler: (code) ->
     file_handler: (file) ->
 
-with howl.mode.by_name "python"
-    unless .config.formatter
-        .config.formatter = "python-black"
+howl.mode.by_name("python").config.formatter or= "python-black"

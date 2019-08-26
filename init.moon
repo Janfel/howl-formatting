@@ -16,7 +16,7 @@ format_buffer = (fmt=nil) ->
     buf = howl.app.editor.buffer
     error "(ERROR) => Attempting to format read-only buffer" if buf.read_only
     mode = buf.mode
-    fmt = fmt or formatter.by_mode mode
+    fmt or= formatter.by_mode mode
     buf.read_only = true
     ok, result = pcall fmt.handler, buf.text, mode
     unless ok
@@ -31,7 +31,7 @@ format_file = (fmt=nil) ->
     buf.read_only = true
     file = howl.app.editor.buffer.file or error "(ERROR) => No associated file"
     mode = howl.mode.for_file file
-    fmt = fmt or formatter.by_mode mode
+    fmt or= formatter.by_mode mode
     error "(ERROR) => File not writeable" unless file.writeable
     backup = file.contents
     ok, result = pcall fmt.file_handler, file, mode
