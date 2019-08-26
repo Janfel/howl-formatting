@@ -22,7 +22,7 @@ with howl.config
         validate: (value) -> type(value) == "number" and not tostring(value)\find("%.") and value >= 0
         default: 80
 
-format_buffer = (args) ->
+buffer_format = (args) ->
     {:fmt, :ok} = args
     return unless ok
 
@@ -42,7 +42,7 @@ format_buffer = (args) ->
     buf.read_only = false
     buf.text = result
 
-format_file = (args) ->
+file_format = (args) ->
     {:fmt, :ok} = args
     return unless ok
 
@@ -69,15 +69,15 @@ format_file = (args) ->
 
 
 cmd_specs = {
-    {"format-buffer", "Format the current buffer", format_buffer, (opts) -> fmt: nil, ok: true}
-    {"format-buffer-with", "Format the current buffer with a given formatter"
-    format_buffer, (opts) ->
+    {"buffer-format", "Format the current buffer", buffer_format, (opts) -> fmt: nil, ok: true}
+    {"buffer-format-with", "Format the current buffer with a given formatter"
+    buffer_format, (opts) ->
         selection = formatter.select!
         fmt: selection, ok: selection
     }
-    {"format-file", "Format the current file and reload the buffer", format_file, (opts) -> fmt: nil, ok: true}
-    {"format-file-with", "Format the current file with a given formatter and reload the buffer"
-    format_file, (opts) ->
+    {"file-format", "Format the current file and reload the buffer", file_format, (opts) -> fmt: nil, ok: true}
+    {"file-format-with", "Format the current file with a given formatter and reload the buffer"
+    file_format, (opts) ->
         selection = formatter.select!
         fmt: selection, ok: selection
     }
@@ -90,7 +90,7 @@ unload_cmds = ->
 
 
 keymap ={
-    editor: alt_f: "format-buffer"
+    editor: alt_f: "buffer-format"
 }
 howl.bindings.push keymap
 unload_keys = -> howl.bindings.remove keymap
@@ -99,7 +99,7 @@ unload_keys = -> howl.bindings.remove keymap
 signal_handlers = {
     {
         signal: "buffer-saved"
-        handler: -> format_file! if howl.config.format_on_save
+        handler: -> file_format! if howl.config.format_on_save
     }
 }
 howl.signal.connect sh.signal, sh.handler for sh in *signal_handlers
