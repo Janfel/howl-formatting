@@ -1,9 +1,21 @@
 formatter = bundle_load "formatter"
+import Process from howl.io
 
 formatter.register
     name: "python-black"
     description: ""
-    handler: (code) ->
+    handler: (code, mode) ->
+        line_length = mode.config.line_length
+        out, err, proc = Process.execute {
+            "python", "-m",
+            "black", "-q",
+            "-l", tostring(line_length),
+            "-"
+        }, {stdin: code}
+
+        error err unless proc.successful
+        out
+
     file_handler: (file) ->
 
 howl.mode.by_name("python").config.formatter or= "python-black"
