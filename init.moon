@@ -1,5 +1,6 @@
 formatter = bundle_load "formatter"
 
+
 with howl.config
     .define
         name: "formatter"
@@ -11,6 +12,14 @@ with howl.config
         description: "Whether to run format-current-file on save"
         type_of: "boolean"
         default: true
+
+    .define
+        name: "line_length"
+        description: "The maximum line length formatters should output"
+        --type_of: "number"
+        convert: (value) -> tonumber(value) or tonumber(tostring value) or value
+        validate: (value) -> type(value) == "number" and not tostring(value)\find("%.") and value >= 0 -- Check if integer
+        default: 80
 
 format_buffer = (fmt=nil) ->
     buf = howl.app.editor.buffer
@@ -55,10 +64,10 @@ cmd_specs = {
     {"format-file-with", "Format the current file with a given formatter and reload the buffer", format_file, formatter.select}
 }
 for {name, description, handler, input} in *cmd_specs
-    howl.commands.register {:name, :description, :handler, :input}
+    howl.command.register {:name, :description, :handler, :input}
 
 unload_cmds = ->
-    howl.commands.unregister name for {name} in *cmd_specs
+    howl.command.unregister name for {name} in *cmd_specs
 
 
 keymap ={
