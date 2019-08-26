@@ -15,30 +15,36 @@ with howl.config
 format_buffer = (fmt=nil) ->
     buf = howl.app.editor.buffer
     error "(ERROR) => Attempting to format read-only buffer" if buf.read_only
+
     mode = buf.mode
     fmt or= formatter.by_mode mode
+
     buf.read_only = true
     ok, result = pcall fmt.handler, buf.text, mode
     unless ok
         buf.read_only = false
         error result
+
     buf.text = result
     buf.read_only = false
 
 format_file = (fmt=nil) ->
     buf = howl.app.editor.buffer
     error "(ERROR) => Attempting to format read-only buffer" if buf.read_only
+
     buf.read_only = true
     file = howl.app.editor.buffer.file or error "(ERROR) => No associated file"
     mode = howl.mode.for_file file
     fmt or= formatter.by_mode mode
     error "(ERROR) => File not writeable" unless file.writeable
+
     backup = file.contents
     ok, result = pcall fmt.file_handler, file, mode
     unless ok
         file.contents = backup
         buf.read_only = false
         error result
+
     howl.app.editor.buffer.reload()
     buf.read_only = false
 
@@ -55,8 +61,9 @@ unload_cmds = ->
     howl.commands.unregister name for {name} in *cmd_specs
 
 
-keymap = editor: alt_f: "format-buffer"
-
+keymap ={
+    editor: alt_f: "format-buffer"
+}
 howl.bindings.push keymap
 unload_keys = -> howl.bindings.remove keymap
 
