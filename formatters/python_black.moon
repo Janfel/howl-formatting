@@ -7,9 +7,9 @@ formatter.register
     handler: (code, mode) ->
         line_length = mode.config.line_length
         out, err, proc = Process.execute {
-            "python", "-m",
-            "black", "-q",
-            "-l", tostring(line_length),
+            "python", "-m"
+            "black", "-q"
+            "-l", tostring line_length
             "-"
         }, {stdin: code}
 
@@ -19,10 +19,10 @@ formatter.register
     file_handler: (file, mode) ->
         line_length = mode.config.line_length
         out, err, proc = Process.execute {
-            "python", "-m",
-            "black", "-q",
-            "-l", tostring(line_length),
-            tostring(file)
+            "python", "-m"
+            "black", "-q"
+            "-l", line_length
+            file
         }
 
         error err unless proc.successful
