@@ -25,10 +25,6 @@ format_buffer = (fmt=nil) ->
     buf.text = result
     buf.read_only = false
 
-format_buffer_with = ->
-    format_buffer formatter.select!
-
-
 format_file = (fmt=nil) ->
     buf = howl.app.editor.buffer
     error "(ERROR) => Attempting to format read-only buffer" if buf.read_only
@@ -46,14 +42,11 @@ format_file = (fmt=nil) ->
     howl.app.editor.buffer.reload()
     buf.read_only = false
 
-format_file_with = ->
-    format_file formatter.select!
-
 cmd_specs = {
     {"format-buffer", "Format the current buffer", format_buffer}
-    {"format-buffer-with", "Format the current buffer with a given formatter", format_buffer_with}
+    {"format-buffer-with", "Format the current buffer with a given formatter", format_buffer, formatter.select}
     {"format-file", "Format the current file and reload the buffer", format_file}
-    {"format-file-with", "Format the current file with a given formatter and reload the buffer", format_file_with}
+    {"format-file-with", "Format the current file with a given formatter and reload the buffer", format_file, formatter.select}
 }
 for {name, description, handler, input} in *cmd_specs
     howl.commands.register {:name, :description, :handler, :input}
