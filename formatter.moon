@@ -1,7 +1,5 @@
 --
-formatters = setmetatable {},{
-    __index: (t, k) -> error "Formatter not found: "..k
-}
+formatters = {}
 formatter_names = {}
 
 
@@ -14,9 +12,6 @@ unregister = (fmt) ->
     formatter_names[fmt.name] = nil
 
 by_name = (name) ->
-    if not name or name == ""
-        name = select!
-        return unless name
     formatters[name]
 
 by_mode = (mode) ->
