@@ -16,6 +16,16 @@ formatter.register
         error err unless proc.successful
         out
 
-    file_handler: (file) ->
+    file_handler: (file, mode) ->
+        line_length = mode.config.line_length
+        out, err, proc = Process.execute {
+            "python", "-m",
+            "black", "-q",
+            "-l", tostring(line_length),
+            tostring(file)
+        }
+
+        error err unless proc.successful
+        out
 
 howl.mode.by_name("python").config.formatter or= "python-black"

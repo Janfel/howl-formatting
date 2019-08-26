@@ -1,4 +1,3 @@
---
 formatters = {}
 formatter_names = {}
 
