@@ -14,11 +14,12 @@ with howl.config
         default: true
 
     .define
+        -- Implement predefined positive-integer type
         name: "line_length"
         description: "The maximum line length formatters should output"
-        --type_of: "number"
         convert: (value) -> tonumber(value) or tonumber(tostring value) or value
-        validate: (value) -> type(value) == "number" and not tostring(value)\find("%.") and value >= 0 -- Check if integer
+        -- Check if positive integer
+        validate: (value) -> type(value) == "number" and not tostring(value)\find("%.") and value >= 0
         default: 80
 
 format_buffer = (fmt=nil) ->
@@ -35,8 +36,8 @@ format_buffer = (fmt=nil) ->
         buf.read_only = false
         error result
 
-    buf.text = result
     buf.read_only = false
+    buf.text = result
 
 format_file = (fmt=nil) ->
     buf = howl.app.editor.buffer
@@ -57,8 +58,8 @@ format_file = (fmt=nil) ->
         buf.read_only = false
         error result
 
-    howl.app.editor.buffer.reload()
     buf.read_only = false
+    howl.app.editor.buffer.reload()
 
 cmd_specs = {
     {"format-buffer", "Format the current buffer", format_buffer}
