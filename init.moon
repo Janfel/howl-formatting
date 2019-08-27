@@ -11,7 +11,7 @@ with howl.config
         name: "format_on_save"
         description: "Whether to run format-current-file on save"
         type_of: "boolean"
-        default: true
+        default: false
 
     .define
         -- Implement predefined positive-integer type
