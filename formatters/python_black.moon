@@ -13,7 +13,7 @@ formatter.register
             "-"
         }, {stdin: code}
 
-        error err unless proc.successful
+        assert proc.successful, err
         out
 
     file_handler: (file, mode) ->
@@ -25,7 +25,7 @@ formatter.register
             file
         }
 
-        error err unless proc.successful
+        assert proc.successful, err
         out
 
 howl.mode.by_name("python").config.formatter or= "python-black"

@@ -19,7 +19,7 @@ with howl.config
         description: "The maximum line length formatters should output"
         convert: (value) -> tonumber(value) or tonumber(tostring value) or value
         -- Check if positive integer
-        validate: (value) -> type(value) == "number" and not tostring(value)\find("%.") and value >= 0
+        validate: (value) -> type(value) == "number" and not tostring(value)\ufind("%.") and value >= 0
         default: 80
 
 buffer_format = (args) ->

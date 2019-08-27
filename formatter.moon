@@ -20,8 +20,8 @@ select = ->
     result = howl.interact.select
         items: formatter_names
         columns: {
-            {header: "Formatter", style: "string"}
-            {header: "Description", style: "comment"}
+            {style: "string"}
+            {style: "comment"}
         }
     return unless result
     by_name result.selection
