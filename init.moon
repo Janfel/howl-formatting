@@ -17,9 +17,7 @@ with howl.config
         -- Implement predefined positive-integer type
         name: "line_length"
         description: "The maximum line length formatters should output"
-        convert: (value) -> tonumber(value) or tonumber(tostring value) or value
-        -- Check if positive integer
-        validate: (value) -> type(value) == "number" and not tostring(value)\ufind("%.") and value >= 0
+        type_of: "number" -- TODO Change to positive_number when #529 is closed.
         default: 80
 
 buffer_format = (args) ->
