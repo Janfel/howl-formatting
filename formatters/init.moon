@@ -1,4 +1,4 @@
 -- Initialize bundled formatters
 bundle_load "formatters.#{f}" for f in *{
-    "python_black"
+  "python_black"
 }
